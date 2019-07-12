@@ -1,8 +1,27 @@
 <template>
   <div>
+    <!-- 头部 -->
+    <Header/>
+    <!-- 内容占位组件 -->
     <nuxt />
+    <!-- 底部 -->
+    <Footer/>
   </div>
 </template>
+
+<script>
+// 引入头部模块
+import Header from '@/components/header'
+// 引入底部模块
+import Footer from '@/components/footer'
+export default {
+  // 注册组件
+  components: {
+    Header,
+    Footer
+  }
+}
+</script>
 
 <style>
 html {
@@ -16,40 +35,19 @@ html {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
 }
-
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
+* {
+  padding: 0;
   margin: 0;
 }
-
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
+ul , li , ol {
+  list-style: none;
+}
+a {
   text-decoration: none;
-  padding: 10px 30px;
+  color: inherit;
+}
+em, i {
+  font-style: normal;
 }
 
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
-}
-
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
-}
 </style>
