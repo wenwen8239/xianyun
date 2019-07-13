@@ -41,8 +41,6 @@ export default {
       console.log(this.form)
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          // 将用户数据存储到内存中
-          this.$store.commit('user/userInfo',this.form)
           // 请求用户登录接口
           this.$axios({
             method: 'POST',
@@ -51,6 +49,8 @@ export default {
           })
           .then(res => {
             console.log(res.data);
+            // 将用户数据存储到内存中
+            this.$store.commit('user/setUserInfo',res.data)
             // 登录成功弹出提示
             this.$message({
               duration: 1000,

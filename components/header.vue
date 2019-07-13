@@ -32,16 +32,16 @@
           <nuxt-link to="/user/login">登录 / 注册</nuxt-link>
         </div>
         <!-- 用户登录成功显示信息 -->
-        <div class="login" v-else>
+        <div v-else>
           <el-dropdown>
             <span class="el-dropdown-link">
-              <img :src="$axios.defaults.baseUrl + $store.state.user.userInfo.user.defaultAvatar" alt="">
+              <img :src="$axios.defaults.baseURL + $store.state.user.userInfo.user.defaultAvatar" alt="">
               {{$store.state.user.userInfo.user.nickname}}
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item><nuxt-link to="/user/login">退出</nuxt-link></el-dropdown-item>
+              <el-dropdown-item @click.native="handleLoginOut">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -57,10 +57,14 @@ export default {
 
     }
   },
-  mathods: {
+  methods: {
     // 用户退出
-    handleLogout() {
-
+    handleLoginOut() {
+      console.log(123)
+      // 将用户信息清除
+      this.$store.commit('user/clearUserInfo');
+      // 跳转页面
+      this.$router.push('/user/login');
     }
   }
 }
@@ -79,6 +83,7 @@ export default {
   // logo样式
   .logo {
     margin-top: 10px;
+    outline: none;
     img {
       width: 156px;
       height: 43px;
@@ -119,7 +124,8 @@ export default {
         color: #606266;
       }
     }
-    .login {
+    .el-dropdown-link {
+      outline: none;
       img {
         width: 32px;
         height: 32px;
