@@ -18,20 +18,30 @@
 
       <!-- 登录信息 -->
       <div class="info">
-        <div v-if="false">
+        <div class="message" v-if="!$store.state.user.userInfo.token">
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              <i class="el-icon-bell"></i>
+              消息
+              <i class="el-icon-caret-bottom el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>消息</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           <nuxt-link to="/user/login">登录 / 注册</nuxt-link>
         </div>
         <!-- 用户登录成功显示信息 -->
-        <div class="login">
+        <div class="login" v-else>
           <el-dropdown>
             <span class="el-dropdown-link">
-              <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt="">
-              黑马程序猿
-               <i class="el-icon-arrow-down el-icon--right"></i>
+              <img :src="$axios.defaults.baseUrl + $store.state.user.userInfo.user.defaultAvatar" alt="">
+              {{$store.state.user.userInfo.user.nickname}}
+              <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item>退出</el-dropdown-item>
+              <el-dropdown-item><nuxt-link to="/user/login">退出</nuxt-link></el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -98,13 +108,26 @@ export default {
     }
   }
   // 用户信息样式
-  .login {
-    img {
-      width: 32px;
-      height: 32px;
-      vertical-align: middle;
+  .info {
+    .message {
+      cursor: pointer;
+      /deep/ .el-dropdown {
+        font-size: 16px;
+      }
+      a {
+        margin-left: 10px;
+        color: #606266;
+      }
+    }
+    .login {
+      img {
+        width: 32px;
+        height: 32px;
+        vertical-align: middle;
+      }
     }
   }
+
 }
 </style>
 

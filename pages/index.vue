@@ -70,9 +70,9 @@ export default {
 
 <style lang="less" scoped>
  .container{
-  min-width:1000px;
-  margin:0 auto;
   position:relative;
+  // min-width:1000px;
+  margin:0 auto;
 
   /deep/ .el-carousel__container{
     height:700px;
@@ -88,7 +88,7 @@ export default {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%);
+    transform: translate(-50%,-50%);
     z-index: 9;
     .search-bar {
       width: 552px;
@@ -126,10 +126,9 @@ export default {
           width: 100%;
           height: 100%;
           border: 1px rgba(255,255,255,.2) solid;
-          transform: scale(1.1,1.3) perspective(0.7em) rotateX(2.2deg);
+          transform: scale(1.1,1.2) perspective(0.5em) rotateX(1.5deg);
           transform-origin: bottom left;
-          background: rgba(0,0,0,0.5);
-          border-radius: 1px 2px 0 0;
+          background: rgba(0,0,0,0.6);
           box-sizing: border-box;
         }
       }
