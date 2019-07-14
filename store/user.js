@@ -1,4 +1,4 @@
-
+// 用户管理
 // 存数据
 export const state = () => ({
   userInfo: {
@@ -24,5 +24,24 @@ export const mutations = {
 
 // 异步设置修改state数据
 export const actions = {
-
+  // 请求登录接口
+  login({commit},data) {
+    return this.$axios({
+      method: 'POST',
+      url: '/accounts/login',
+      data
+    }).then(res => {
+      // 将用户数据存储到内存中
+      commit('setUserInfo',res.data);
+    })
+  },
+  register({commit},data) {
+    return this.$axios({
+      method: 'POST',
+      url: '/accounts/register',
+      data
+    }).then(res => {
+      commit('registerUserInfo',res.data)
+    })
+  }
 }

@@ -19,6 +19,11 @@
       <!-- 登录信息 -->
       <div class="info">
         <div class="message" v-if="!$store.state.user.userInfo.token">
+          <nuxt-link to="/user/login">登录 / 注册</nuxt-link>
+        </div>
+        <!-- 用户登录成功显示信息 -->
+        <div v-else>
+          <!-- 消息 -->
           <el-dropdown>
             <span class="el-dropdown-link">
               <i class="el-icon-bell"></i>
@@ -29,10 +34,7 @@
               <el-dropdown-item>消息</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <nuxt-link to="/user/login">登录 / 注册</nuxt-link>
-        </div>
-        <!-- 用户登录成功显示信息 -->
-        <div v-else>
+          <!-- 用户信息 -->
           <el-dropdown>
             <span class="el-dropdown-link">
               <img :src="$axios.defaults.baseURL + $store.state.user.userInfo.user.defaultAvatar" alt="">
@@ -75,6 +77,8 @@ export default {
   height: 60px;
   line-height: 60px;
   background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 3px 0 #f5f5f5;
   // 版心布局
   .main {
     width: 1000px;

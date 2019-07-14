@@ -9,7 +9,7 @@
     </el-form-item>
     <span><nuxt-link to="#">忘记密码</nuxt-link></span>
     <el-form-item>
-      <el-button type="primary" style="width:100%;" @click="handleLoginSubmit">提交</el-button>
+      <el-button type="primary" style="width:100%;" @click="handleLoginSubmit">登录</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -38,32 +38,22 @@ export default {
   methods: {
     // 验证用户登录
     handleLoginSubmit() {
-      console.log(this.form)
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          // 请求用户登录接口
-          this.$axios({
-            method: 'POST',
-            url: '/accounts/login',
-            data: this.form
-          })
-          .then(res => {
-            console.log(res.data);
-            // 将用户数据存储到内存中
-            this.$store.commit('user/setUserInfo',res.data)
+          // 调用action中的请求
+          this.$store.dispatch('user/login',this.form).then(res => {
             // 登录成功弹出提示
             this.$message({
-              duration: 1000,
+              duration: 2000,
               type:'success',
-              message: '登录成功'
+              message: '登录成功,正在跳转...'
             })
             setTimeout(function () {
               // 跳转到首页
               this.$router.push('/');
-            }.bind(this),1000)
-          })
-          .catch(err => {
-            console.log(err)
+              // 返回上一个页面
+              // this.$router.back();
+            }.bind(this),1500)
           })
         }
       })
