@@ -38,9 +38,9 @@
           <el-col v-for="(item,index) in sales" :key="index" :span="6">
             <nuxt-link :to="`/air/flights?departCity=${item.departCity}&departCode=${item.departCode}&destCity=${item.destCity}&destCode=${item.destCode}&departDate=${item.departDate}`">
               <img :src="sales.cover" alt="">
-              <el-row type="flex" class="layer-bar">
-                <span>{{sales.departCity}}-{{sales.destCity}}</span>
-                <span>{{sales.price}}</span>
+              <el-row type="flex" justify="space-between" class="layer-bar">
+                <span>{{item.departCity}}-{{item.destCity}}</span>
+                <span>{{item.price}}</span>
               </el-row>
             </nuxt-link>
           </el-col>
@@ -71,11 +71,6 @@ export default {
     .then(res => {
       console.log(res)
       this.sales = res.data.data;
-      // var data = res.data.data;
-      // data.forEach(e => {
-      //   console.log(e)
-      //   this.sales = e
-      // })
     })
     .catch(err => {
       console.log(err)
@@ -129,14 +124,14 @@ export default {
         height: 140px;
         overflow: hidden;
         position: relative;
-        border: 1px solid #000;
         .layer-bar {
           position: absolute;
           bottom: 0;
           left: 0;
-          span {
-
-          }
+          width: 100%;
+          padding: 5px 10px;
+          background-color: rgba(0,0,0,0.3);
+          color: #fff;
         }
       }
     }

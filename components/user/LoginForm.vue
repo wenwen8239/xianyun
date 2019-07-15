@@ -53,7 +53,7 @@ export default {
               this.$router.push('/');
               // 返回上一个页面
               // this.$router.back();
-            }.bind(this),1500)
+            },1500)
           })
         }
       })
