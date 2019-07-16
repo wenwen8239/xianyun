@@ -100,7 +100,6 @@ export default {
     a {
       display: block;
       height: 60px;
-      line-height: 60px;
       padding: 0 20px;
       box-sizing: border-box;
       &:hover {

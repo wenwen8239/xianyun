@@ -48,7 +48,7 @@ export default {
               type:'success',
               message: '登录成功,正在跳转...'
             })
-            setTimeout(function () {
+            setTimeout(() => {
               // 跳转到首页
               this.$router.push('/');
               // 返回上一个页面

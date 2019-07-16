@@ -37,10 +37,10 @@
         <el-row type="flex" justify="space-between">
           <el-col v-for="(item,index) in sales" :key="index" :span="6">
             <nuxt-link :to="`/air/flights?departCity=${item.departCity}&departCode=${item.departCode}&destCity=${item.destCity}&destCode=${item.destCode}&departDate=${item.departDate}`">
-              <img :src="sales.cover" alt="">
+              <img :src="item.cover" alt="">
               <el-row type="flex" justify="space-between" class="layer-bar">
                 <span>{{item.departCity}}-{{item.destCity}}</span>
-                <span>{{item.price}}</span>
+                <span>￥{{Number(item.price).toFixed(2)}}</span>
               </el-row>
             </nuxt-link>
           </el-col>
@@ -75,9 +75,6 @@ export default {
     .catch(err => {
       console.log(err)
     })
-  },
-  methods: {
-
   }
 }
 </script>
@@ -129,6 +126,7 @@ export default {
           bottom: 0;
           left: 0;
           width: 100%;
+          font-size: 14px;
           padding: 5px 10px;
           background-color: rgba(0,0,0,0.3);
           color: #fff;

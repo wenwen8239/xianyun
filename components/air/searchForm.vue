@@ -62,40 +62,42 @@ export default {
   },
   methods: {
     // 封装实现下拉菜单
-    querySearch(value,callback,city,code) {
-      // 判断当输入的数据为空的时候
-      if (!value) {
-        callback([]) // 不加载下拉菜单
-        return;
-      }
-      // 请求机票城市信息
-      this.$axios({
-        url: '/airs/city',
-        params: {
-          name: value
+    querySearch(value) {
+      return new Promise((resolve,reject) => {
+        // 判断当输入的数据为空的时候
+        if (!value) {
+          return resolve([]); // 不加载下拉菜单
         }
-      }).then(res => {
-        // 获取请求到的数据
-        const {data} = res.data;
-        // 给数组中的对象添加value，下拉列表必须要有value选项，value是用来展示下拉列表数据的绑定值
-        const newArr = data.map(v => {
-          v.value = v.name.replace('市','');
-          return v;
+        // 请求机票城市信息
+        this.$axios({
+          url: '/airs/city',
+          params: {
+            name: value
+          }
+        }).then(res => {
+          // 获取请求到的数据
+          const {data} = res.data;
+          // 给数组中的对象添加value，下拉列表必须要有value选项，value是用来展示下拉列表数据的绑定值
+          const newArr = data.map(v => {
+            v.value = v.name.replace('市','');
+              return v;
+          })
+          resolve(newArr)
         })
-        callback(newArr)
-        // 默认选中出现的第一个数组数据
-        this.form.city = newArr[0].value;
-        // 保存城市代码
-        this.form.code = newArr[0].sort;
-      })
-      .catch(err => {
-        console.log(err)
       })
     },
     // 获取出发城市信息
     queryDepartSearch(value,callback) {
       // 调用实现下拉菜单函数
-      this.querySearch(value,callback,this.form.departCity,this.form.destCode)
+      this.querySearch(value).then(res => {
+        if (res.length > 0) {
+          // 默认选中出现的第一个数组数据
+          this.form.departCity = res[0].value;
+          // 保存城市代码
+          this.form.departCode = res[0].sort;
+        }
+        callback(res);
+      })
     },
     // 选择出发城市
     handleDepartSelect(item) {
@@ -106,7 +108,15 @@ export default {
     // 获取到达城市信息
     queryDestSearch(value,callback) {
       // 调用实现下拉菜单函数
-      this.querySearch(value,callback,this.form.destCity,this.form.departCode)
+      this.querySearch(value).then(res => {
+        if (res.length > 0) {
+          // 默认选中出现的第一个数组数据
+          this.form.destCity = res[0].value;
+          // 保存城市代码
+          this.form.destCode = res[0].sort;
+        }
+        callback(res);
+      })
     },
     // 选择到达城市
     handleDestSelect(item) {
@@ -173,18 +183,21 @@ export default {
         }
       })
       // 请求机票列表数据
-      this.$axios({
-        url: '/airs',
-        params: this.form
-      })
-      .then(res => {
-        console.log(res)
-        // 跳转到机票列表页面
-        this.$router.push({path: '/air/flights',query: this.form})
-      })
-      .catch(err => {
-        console.log(err)
-      })
+      if (valid) {
+        this.$axios({
+          url: '/airs',
+          params: this.form
+        })
+        .then(res => {
+          console.log(res)
+          // 跳转到机票列表页面
+          this.$router.push({path: '/air/flights',query: this.form})
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
+
     }
   }
 };
