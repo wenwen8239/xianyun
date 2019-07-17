@@ -16,6 +16,16 @@
         </div>
         <!-- 机票列表 -->
         <FlightsItem v-for="(item,index) in dataList" :key="index" :data="item"/>
+        <!-- 分页 -->
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageIndex"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
       </el-col>
       <!-- 右边服务与历史查询 -->
       <el-col class="aside" :span="6">
@@ -43,9 +53,25 @@ export default {
     return {
       airport: '',
       // 航班总数据
-      flightsData: {},
-      // 航班列表数据
-      dataList: []
+      flightsData: {
+        // 航班列表数据
+        flights: []
+      },
+      // 负责渲染页面数据数组
+      // dataList: [],
+      // 当前页码
+      pageIndex: 1,
+      pageSize: 5,
+      // 总页数
+      total: 0
+    }
+  },
+  computed: {
+    dataList() {
+      return this.flightsData.flights.slice(
+        (this.pageIndex - 1) * this.pageSize,
+        this.pageIndex * this.pageSize
+      );
     }
   },
   mounted () {
@@ -55,12 +81,39 @@ export default {
     })
     .then(res => {
       console.log(res)
+      // 设置航班总数据
       this.flightsData = res.data
-      this.dataList = res.data.flights
+      // 设置总条数
+      this.total = res.data.total
+      // 初始化分页
+      // this.setDateList()
     })
-    .catch(err => {
-      console.log(err)
-    })
+
+  },
+  methods: {
+    // 实现页面分页
+    setDateList() {
+      // 获取当前页码数
+      var pageIndex = (this.pageIndex - 1) * this.pageSize;
+      // 获取页面条数
+      var pageSize = pageIndex * this.pageSize;
+      // 把分页赋值到显示到显示页面数组中
+      this.dataList = this.flightsData.flights.slice((this.pageIndex - 1) * this.pageSize,this.pageIndex * this.pageSize)
+    },
+    // 页面显示条数切换
+    handleSizeChange(value) {
+      console.log(value)
+      this.pageSize = value
+      this.pageIndex = 1
+      // this.setDateList()
+      this.dataLists
+    },
+    // 当前页码切换
+    handleCurrentChange(value) {
+      console.log(value)
+      this.pageIndex = value
+      // this.setDateList()
+    }
   }
 }
 </script>

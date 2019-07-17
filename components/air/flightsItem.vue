@@ -1,20 +1,20 @@
 <template>
   <div class="flight">
     <!-- 机票信息 -->
-    <el-row type="flex" justify="space-between" align="middle" class="flight-item" @click="handleShowRecommend">
+    <el-row type="flex" justify="space-between" align="middle" class="flight-item" @click.native="handleShowRecommend">
       <el-col>{{data.airline_name}}  {{data.flight_no}}</el-col>
       <el-col>
         <strong>{{data.dep_time}}</strong>
         <span class="airport">{{data.org_airport_name}}{{data.org_airport_query}}</span>
       </el-col>
       <el-col>
-        <span class="time">2时20分</span>
+        <span class="time">{{rankTime}}</span>
       </el-col>
       <el-col>
         <strong>{{data.arr_time}}</strong>
         <span class="airport">{{data.dst_airport_name}}{{data.dst_airport_query}}</span>
       </el-col>
-      <el-col>￥<span class="sell-price">{{data.seat_infos[0].org_settle_price_child}}</span>起</el-col>
+      <el-col>￥<span class="sell-price">{{data.base_price / 2}}</span>起</el-col>
     </el-row>
     <!-- 推荐机票 -->
     <div class="flight-recommend" v-if="showRecommend">
@@ -38,6 +38,7 @@
 <script>
 export default {
   props: {
+    // 用对象的方式便于维护
     data: {
       type: Object,
       default: {},
@@ -48,9 +49,29 @@ export default {
       showRecommend: false
     }
   },
+  computed: {
+    // 计算时间差
+    rankTime() {
+      // 起飞时间
+      const dep = this.data.dep_time.split(':');
+      // 到达时间
+      const arr = this.data.arr_time.split(':');
+      // 将时间转换为分钟
+      const depVal = dep[0] * 60 + +dep[1];
+      const arrVal = arr[0] * 60 + +arr[1];
+      // 求出相差分钟数
+      let dis = arrVal - depVal;
+      // 判断是否为凌晨时间
+      if (dis < 0) {
+        dis = arrVal + 24 * 60 - depVal;
+      }
+      // 返回时间
+      return `${Math.floor(dis / 60)}时${dis % 60}`;
+    }
+  },
   methods: {
+    // 实现点击列表展开隐藏列表数据
     handleShowRecommend() {
-      console.log(123)
       this.showRecommend = !this.showRecommend
     }
   }

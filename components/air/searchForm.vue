@@ -86,19 +86,28 @@ export default {
         })
       })
     },
-    // 获取出发城市信息
-    queryDepartSearch(value,callback) {
-      // 调用实现下拉菜单函数
-      this.querySearch(value).then(res => {
-        if (res.length > 0) {
-          // 默认选中出现的第一个数组数据
-          this.form.departCity = res[0].value;
-          // 保存城市代码
-          this.form.departCode = res[0].sort;
-        }
-        callback(res);
-      })
+    // await后面要接收promise对象，返回的值是resolve的参数
+    async queryDepartSearch(value,callback) {
+      const res = await this.querySearch(value);
+      if (res.length > 0) {
+        this.form.departCity = res[0].value;
+        this.form.departCode = res[0].sort;
+      }
+      callback(res)
     },
+    // 获取出发城市信息
+    // queryDepartSearch(value,callback) {
+    //   // 调用实现下拉菜单函数
+    //   this.querySearch(value).then(res => {
+    //     if (res.length > 0) {
+    //       // 默认选中出现的第一个数组数据
+    //       this.form.departCity = res[0].value;
+    //       // 保存城市代码
+    //       this.form.departCode = res[0].sort;
+    //     }
+    //     callback(res);
+    //   })
+    // },
     // 选择出发城市
     handleDepartSelect(item) {
       console.log(item);
@@ -138,7 +147,7 @@ export default {
     handleDate(value) {
       console.log(value)
       // 格式化日期格式
-      this.form.departDate = moment(value).format('YYYY-DD-MM');
+      this.form.departDate = moment(value).format('YYYY-MM-DD');
       console.log(this.form.departDate)
     },
     // 点击返程
