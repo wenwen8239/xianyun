@@ -199,6 +199,16 @@ export default {
         })
         .then(res => {
           console.log(res)
+          // 先从内存中获取数据，从内存中获取出来的数据是字符串格式，转换为数组格式
+          const airs = JSON.parse(localStorage.getItem('airs')) || []
+          // 把新数据添加到数组中
+          airs.unshift(this.form)
+          // 只保留5条数据
+          if (airs.length === 5) {
+            airs.length = 5;
+          }
+          // 把数据存储到内存中
+          localStorage.setItem('airs',JSON.stringify(airs))
           // 跳转到机票列表页面
           this.$router.push({path: '/air/flights',query: this.form})
         })

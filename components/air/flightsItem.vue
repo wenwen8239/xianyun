@@ -25,7 +25,7 @@
             <el-col :span="12" class="airline"><span>{{item.name}}</span> | {{item.supplierName}}</el-col>
             <el-col :span="6" class="price">￥{{item.settle_price}}</el-col>
             <el-col :span="4">
-              <el-button size="small" type="warning">选定</el-button>
+              <el-button size="small" type="warning" @click="handleToOrder(data.id,item.seat_xid)">选定</el-button>
               <p>剩余 : {{item.discount}}</p>
             </el-col>
           </el-row>
@@ -73,6 +73,17 @@ export default {
     // 实现点击列表展开隐藏列表数据
     handleShowRecommend() {
       this.showRecommend = !this.showRecommend
+    },
+    // 点击选定跳转到订单页面
+    handleToOrder(id,seat_xid) {
+      // 跳转到订单页面
+      this.$router.push({
+        path: '/air/order',
+        query: {
+          id,
+          seat_xid
+        }
+      })
     }
   }
 }
