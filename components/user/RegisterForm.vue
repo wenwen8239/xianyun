@@ -95,6 +95,7 @@ export default {
             tel: this.form.username
         }
       }).then(res => {
+        console.log(res)
         const {code} = res.data;
         this.$confirm(`模拟手机验证码为：${code}`, '提示', {
             confirmButtonText: '确定',

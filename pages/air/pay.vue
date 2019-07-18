@@ -1,6 +1,6 @@
 <template>
-  <div class="order">
-    订单页面
+  <div class="pay">
+    订单付款页
   </div>
 </template>
 

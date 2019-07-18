@@ -85,7 +85,8 @@ export default {
   },
   watch: {
     // 实时监听路由变化
-    $toute() {
+    $route() {
+      console.log(this.$route.query)
       this.getData()
     }
   },
@@ -132,7 +133,9 @@ export default {
       // 重新获取总条数据
       this.total = arr.length
     },
+    // 封装获取所有数据函数
     getData() {
+      // 在切换页码的时候，再次点击历史记录，需要返回到第一页的数据
       this.pageIndex = 1;
       this.$axios({
         url: '/airs',
