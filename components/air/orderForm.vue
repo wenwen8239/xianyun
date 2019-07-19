@@ -248,9 +248,17 @@ export default {
             type: "success",
             duration: 2000
           })
+          console.log(res.data,123)
+          const { data: {id} } = res.data;
+          console.log(id)
           // 跳转至付款页
           setTimeout(() => {
-            this.$router.push('/air/pay')
+            this.$router.push({
+              path: '/air/pay',
+              query: {
+                id
+              }
+            })
           }, 2000);
         })
         .catch(err => {
