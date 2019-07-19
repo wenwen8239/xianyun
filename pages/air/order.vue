@@ -4,11 +4,11 @@
       <!-- 订单表单 -->
       <div class="main">
         <!-- 在父组件中获取数据传递给子组件 -->
-        <OrderForm :data="infoData"/>
+        <OrderForm :data="infoData" @setAllPrice="setAllPrice"/>
       </div>
       <!-- 侧边栏 -->
       <div class="aside">
-        <OrderAside :data="infoData"/>
+        <OrderAside :data="infoData" :allPrice="allPrice"/>
       </div>
     </el-row>
   </div>
@@ -29,8 +29,9 @@ export default {
       infoData: {
         // 初始化保险数据
         insurances: [],
-        seat_infos: {}
-      }
+        seat_infos: {},
+      },
+      allPrice: 0
     }
   },
   mounted () {
@@ -50,6 +51,12 @@ export default {
     .catch(err => {
       console.log(err)
     })
+  },
+  methods: {
+    // 计算总价
+    setAllPrice(price) {
+      this.allPrice = price;
+    }
   }
 }
 </script>

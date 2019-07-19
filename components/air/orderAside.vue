@@ -36,7 +36,7 @@
       </el-row>
       <el-row class="total" type="flex" justify="space-between">
         <div>应付总额：</div>
-        <span>￥1090</span>
+        <span>￥{{allPrice}}</span>
       </el-row>
     </div>
   </div>
@@ -48,34 +48,32 @@ export default {
     data: {
       type: Object,
       default: {}
+    },
+    allPrice: {
+      type: Number, // 总价格是数字格式
+      default: 0  // 给一个默认值为0
     }
-  },
-  data() {
-    return {
-
-    }
-  },
-  mounted () {
-    console.log(this.data)
   },
   computed: {
     // 计算时间差
     rankTime() {
+      // 数据还未请求回来
+      if(!this.data.dep_time) return "";
       // 起飞时间
-      // const dep = this.data.dep_time.split(':');
+      const dep = this.data.dep_time.split(':');
       // 到达时间
-      // const arr = this.data.arr_time.split(':');
+      const arr = this.data.arr_time.split(':');
       // 将时间转换为分钟
-      // const depVal = dep[0] * 60 + +dep[1];
-      // const arrVal = arr[0] * 60 + +arr[1];
-      // // 求出相差分钟数
-      // let dis = arrVal - depVal;
-      // // 判断是否为凌晨时间
-      // if (dis < 0) {
-      //   dis = arrVal + 24 * 60 - depVal;
-      // }
-      // // 返回时间
-      // return `${Math.floor(dis / 60)}时${dis % 60}`;
+      const depVal = dep[0] * 60 + +dep[1];
+      const arrVal = arr[0] * 60 + +arr[1];
+      // 求出相差分钟数
+      let dis = arrVal - depVal;
+      // 判断是否为凌晨时间
+      if (dis < 0) {
+        dis = arrVal + 24 * 60 - depVal;
+      }
+      // 返回时间
+      return `${Math.floor(dis / 60)}时${dis % 60}`;
     }
   }
 }

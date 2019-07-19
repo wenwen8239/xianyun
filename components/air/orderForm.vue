@@ -51,6 +51,7 @@
       <!-- 提交订单按钮 -->
       <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
     </div>
+    <input type="hidden" :value="allPrice">
   </div>
 </template>
 
@@ -76,6 +77,25 @@ export default {
       contactPhone: '13456789876', // 联系人电话
       captcha: '000000', // 验证码,
       invoice: false // 是否需要发票
+    }
+  },
+  computed: {
+    // 计算总价格
+    allPrice() {
+      let price = 0;
+      let length = this.users.length;
+      // 计算所有乘机人总价格
+      price += this.data.seat_infos.org_settle_price * length;
+      // 计算购买保险价格
+      this.insurances.forEach(v => {
+        price += this.data.insurances[v - 1].price * length;
+      })
+      // 计算每位乘机人的机建，燃油价格
+      price += this.data.airport_tax_audlet * length;
+      // 把总价格传递回父组件
+      this.$emit('setAllPrice',price)
+      // 返回总价格
+      return price
     }
   },
   methods: {
