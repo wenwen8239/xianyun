@@ -68,17 +68,17 @@ export default {
       select: '身份证',
       // 乘机人信息
       users: [{
-        username: '',
-        id: ''
+        username: '王小小',
+        id: '12345'
       }],
       card: [
         {value: "1",label: '身份证'},
         {value: "2",label: '护照'}
       ],
       insurances: [], // 保险数据
-      contactName: '', // 联系人姓名
-      contactPhone: '', // 联系人电话
-      captcha: '', // 验证码,
+      contactName: '小小', // 联系人姓名
+      contactPhone: '15611111111', // 联系人电话
+      captcha: '000000', // 验证码,
       invoice: false // 是否需要发票
     }
   },
@@ -96,9 +96,11 @@ export default {
       // 计算每位乘机人的机建，燃油价格
       price += this.data.airport_tax_audlet * length;
       // 把总价格传递回父组件
-      this.$emit('setAllPrice',price)
+      // this.$emit('setAllPrice',price)
       // 返回总价格
-      return price
+      // return price
+      // 使用store来传递总金额
+      this.$store.commit('air/setAllPrice',price)
     }
   },
   methods: {
@@ -120,7 +122,7 @@ export default {
     // 保险数据选中
     handleInsurances(id) {
       // 判断当前点击的id是否存在当前保险数组中
-      if (this.insurances.indexOf(id) !== -1) {
+      if (this.insurances.indexOf(id) > -1) {
         // 把当前保险数组中的数据重新赋值到arr中
         let arr = this.insurances.slice(0);
         // 把数组中id与当前点击的id一致的数据删除
@@ -129,7 +131,7 @@ export default {
         this.insurances = arr
       }
       else {
-        // 如果不存在则把数据存储到保险数组中
+        // 如果存在则把重复数据删除
         this.insurances = [...new Set([...this.insurances , id])]
       }
     },
@@ -156,16 +158,28 @@ export default {
         return;
       }
       // 请求验证码
-      this.$axios({
-        url: '/captchas',
-        method: 'POST',
-        data: {
-          tel: this.contactPhone
-        }
-      })
-      .then(res => {
-        console.log(res)
-        const { code } = res.data
+      // this.$axios({
+      //   url: '/captchas',
+      //   method: 'POST',
+      //   data: {
+      //     tel: this.contactPhone
+      //   }
+      // })
+      // .then(res => {
+      //   console.log(res)
+      //   const { code } = res.data
+      //   // 弹出提示
+      //   this.$confirm(`手机模拟验证码为${code}`,'提示', {
+      //     confirmButtonText: '确定',
+      //     showCancelButton: false,
+      //     type: 'success'
+      //   })
+      // })
+      // .catch(err => {
+      //   console.log(err)
+      // })
+      // 通过store获取手机验证码
+      this.$store.dispatch('user/sendCode',this.contactPhone).then(code => {
         // 弹出提示
         this.$confirm(`手机模拟验证码为${code}`,'提示', {
           confirmButtonText: '确定',
@@ -173,56 +187,83 @@ export default {
           type: 'success'
         })
       })
-      // .catch(err => {
-      //   console.log(err)
-      // })
+
     },
     // 提交表单
     handleSubmit() {
-      // 获取所有的表单数据
-      const orderData = {
-        users: this.users,
-        insurances: this.insurances,
-        contactName: this.contactName,
-        contactPhone: this.contactPhone,
-        invoice: this.invoice,
-        captcha: this.captcha,
-        seat_xid: this.data.seat_infos.seat_xid,
-        air: this.data.id
+      // 设置表单验证信息
+      const rules = {
+        users: {
+          value: this.users[0].username && this.users[0].id,
+          message: '请输入乘机人信息'
+        },
+        contactName: {
+          value: this.contactName,
+          message: '请输入联系人姓名'
+        },
+        contactPhone: {
+          value: this.contactPhone,
+          message: '请输入联系人电话'
+        },
+        captcha: {
+          value: this.captcha,
+          message: '请输入验证码'
+        }
       }
-      // 获取store中存储的用户数据
-      const {user: {userInfo}} = this.$store.state;
-      // 请求提交机票订单信息
-      this.$axios({
-        url: '/airorders',
-        method: 'POST',
-        data: orderData,
-        headers: {
-          Authorization: `Bearer ${userInfo.token || 'NO TOKEN'}`
+      let voild = true;
+      Object.keys(rules).forEach(v => {
+        if (!voild) return;
+        if (!rules[v].value) {
+          voild = false;
+          this.$message.error(rules[v].message)
         }
       })
-      .then(res => {
-        console.log(res)
-        this.$message({
-          message: "正在生成订单！请稍等",
-          type: "success",
-          duration: 2000
+      if (voild) {
+        // 获取所有的表单数据
+        const orderData = {
+          users: this.users,
+          insurances: this.insurances,
+          contactName: this.contactName,
+          contactPhone: this.contactPhone,
+          invoice: this.invoice,
+          captcha: this.captcha,
+          seat_xid: this.data.seat_infos.seat_xid,
+          air: this.data.id
+        }
+        // 获取store中存储的用户数据
+        const {user: {userInfo}} = this.$store.state;
+        // 请求提交机票订单信息
+        this.$axios({
+          url: '/airorders',
+          method: 'POST',
+          data: orderData,
+          headers: {
+            Authorization: `Bearer ${userInfo.token || 'NO TOKEN'}`
+          }
         })
-        // 跳转至付款页
-        setTimeout(() => {
-          this.$router.push('/air/pay')
-        }, 2000);
-      })
-      .catch(err => {
-        // console.log(err)
-        const { message } = err.response.data;
-        // 弹出提示
-        // this.$confirm(message,'提示', {
-        //   confirmButtonText: '确定',
-        //   showCancelButton: false,
-        //   type: 'warning'
-        // })
-      })
+        .then(res => {
+          console.log(res)
+          this.$message({
+            message: "正在生成订单！请稍等",
+            type: "success",
+            duration: 2000
+          })
+          // 跳转至付款页
+          setTimeout(() => {
+            this.$router.push('/air/pay')
+          }, 2000);
+        })
+        .catch(err => {
+          console.log(err)
+          // const { message } = err.response.data;
+          // 弹出提示
+          // this.$confirm(message,'提示', {
+          //   confirmButtonText: '确定',
+          //   showCancelButton: false,
+          //   type: 'warning'
+          // })
+        })
+      }
     }
   }
 }

@@ -62,9 +62,13 @@ export default {
   methods: {
     // 用户退出
     handleLoginOut() {
-      console.log(123)
       // 将用户信息清除
       this.$store.commit('user/clearUserInfo');
+      this.$message({
+        duration: 1000,
+        type:'success',
+        message: '退出'
+      })
       // 跳转页面
       this.$router.push('/user/login');
     }

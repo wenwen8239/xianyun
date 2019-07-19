@@ -35,6 +35,7 @@ export const actions = {
       commit('setUserInfo',res.data);
     })
   },
+  // 请求注册接口
   register({commit},data) {
     return this.$axios({
       method: 'POST',
@@ -42,6 +43,20 @@ export const actions = {
       data
     }).then(res => {
       commit('registerUserInfo',res.data)
+    })
+  },
+  // 获取手机验证码
+  sendCode(store,phoneNumber) {
+    // 请求手机验证码接口
+    return this.$axios({
+      url: `captchas`,
+      method: "POST",
+      data: {
+          tel: phoneNumber
+      }
+    }).then(res => {
+      const {code} = res.data;
+      return code;
     })
   }
 }

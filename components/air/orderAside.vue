@@ -36,7 +36,10 @@
       </el-row>
       <el-row class="total" type="flex" justify="space-between">
         <div>应付总额：</div>
-        <span>￥{{allPrice}}</span>
+        <!-- 使用父组件传递的参数 -->
+        <!-- <span>￥{{allPrice}}</span> -->
+        <!-- 使用store的数据 -->
+        <span>￥{{$store.state.air.allPrice}}</span>
       </el-row>
     </div>
   </div>

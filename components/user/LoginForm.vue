@@ -5,7 +5,7 @@
       <el-input type="username" v-model="form.username" placeholder="用户名/手机"></el-input>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input type="password" v-model="form.password" placeholder="密码"></el-input>
+      <el-input type="password" v-model="form.password" placeholder="密码" @keyup.native.enter="handleLoginSubmit"></el-input>
     </el-form-item>
     <span><nuxt-link to="#">忘记密码</nuxt-link></span>
     <el-form-item>
@@ -20,8 +20,8 @@ export default {
     return {
       // 登录信息
       form: {
-        username: '',
-        password: ''
+        username: '15611111111',
+        password: '123456'
       },
       // 定义验证规则
       rules: {
@@ -44,7 +44,7 @@ export default {
           this.$store.dispatch('user/login',this.form).then(res => {
             // 登录成功弹出提示
             this.$message({
-              duration: 2000,
+              duration: 1500,
               type:'success',
               message: '登录成功,正在跳转...'
             })

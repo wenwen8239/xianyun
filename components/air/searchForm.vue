@@ -204,7 +204,7 @@ export default {
           // 把新数据添加到数组中
           airs.unshift(this.form)
           // 只保留5条数据
-          if (airs.length === 5) {
+          if (airs.length > 5) {
             airs.length = 5;
           }
           // 把数据存储到内存中

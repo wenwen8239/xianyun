@@ -87,22 +87,32 @@ export default {
         });
         return;
       }
-      // 请求手机验证码接口
-      this.$axios({
-        url: `captchas`,
-        method: "POST",
-        data: {
-            tel: this.form.username
-        }
-      }).then(res => {
-        console.log(res)
-        const {code} = res.data;
-        this.$confirm(`模拟手机验证码为：${code}`, '提示', {
-            confirmButtonText: '确定',
-            showCancelButton: false,
-            type: 'warning'
+      // 通过store获取验证码
+      this.$store.dispatch('user/sendCode',this.form.username).then(code => {
+        // 弹出提示
+        this.$confirm(`手机模拟验证码为${code}`,'提示', {
+          confirmButtonText: '确定',
+          showCancelButton: false,
+          type: 'success'
         })
       })
+      // 请求手机验证码接口
+      // this.$axios({
+      //   url: `captchas`,
+      //   method: "POST",
+      //   data: {
+      //       tel: this.form.username
+      //   }
+      // }).then(res => {
+      //   console.log(res)
+      //   const {code} = res.data;
+      //   this.$confirm(`模拟手机验证码为：${code}`, '提示', {
+      //       confirmButtonText: '确定',
+      //       showCancelButton: false,
+      //       type: 'warning'
+      //   })
+      // })
+
     },
     // 提交表单
     handleRegisterForm() {

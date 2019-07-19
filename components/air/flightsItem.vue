@@ -16,6 +16,7 @@
       </el-col>
       <el-col>￥<span class="sell-price">{{data.base_price / 2}}</span>起</el-col>
     </el-row>
+    <!-- <el-row v-if="total === 0">暂无航班数据</el-row> -->
     <!-- 推荐机票 -->
     <div class="flight-recommend" v-if="showRecommend">
       <el-row type="flex" justify="space-between" align="middle">
@@ -52,6 +53,8 @@ export default {
   computed: {
     // 计算时间差
     rankTime() {
+      // 如果数据还没获取到先给一个空对象
+      if (!this.data.dep_time) return '';
       // 起飞时间
       const dep = this.data.dep_time.split(':');
       // 到达时间
@@ -69,6 +72,9 @@ export default {
       return `${Math.floor(dis / 60)}时${dis % 60}`;
     }
   },
+  mounted () {
+    console.log(this.total)
+  },
   methods: {
     // 实现点击列表展开隐藏列表数据
     // handleShowRecommend() {
@@ -85,7 +91,7 @@ export default {
         }
       })
     },
-    
+    // 实现点击列表展开隐藏列表数据
     changeShow() {
       this.showRecommend = false
     }
