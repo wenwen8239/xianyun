@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-row :gutter="24">
+    <el-row :gutter="24" v-loading="loading">
       <!-- 左边列表部分 -->
       <el-col class="flights-content" :span="18">
         <!-- 机票筛选 -->
@@ -15,7 +15,7 @@
           </el-row>
         </div>
         <!-- 机票列表 -->
-        <FlightsItem v-for="(item,index) in dataList" :key="index" :data="item"/>
+        <FlightsItem v-for="(item,index) in dataList" :key="index" :data="item" ref="show"/>
         <!-- 分页 -->
         <el-pagination
           @size-change="handleSizeChange"
@@ -51,6 +51,8 @@ export default {
   },
   data() {
     return {
+      // 页面加载效果开始
+      loading: true,
       airport: '',
       // 航班总数据
       flightsData: {
@@ -102,6 +104,10 @@ export default {
   },
   mounted () {
     this.getData()
+    // 页面加载效果停止
+    setTimeout(() => {
+      this.loading = false
+    },500)
   },
   methods: {
     // 实现页面分页
@@ -124,6 +130,10 @@ export default {
     handleCurrentChange(value) {
       console.log(value)
       this.pageIndex = value
+      // 通过ref获取自组件的方法实现切换页面的时候收回推荐机票
+      this.$refs.show.forEach(v => {
+        v.changeShow()
+      });
       // this.setDateList()
     },
     // 实现筛选列表数据

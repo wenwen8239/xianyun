@@ -74,7 +74,7 @@ export default {
     // 起飞时间
     handleFlightTimes(value) {
       console.log(value)
-      const [ from,to ] = value.split(',')
+      const [ from,to ] = value.split(',');
       const arr = this.data.flights.filter(v => {
         const [ start ] = v.dep_time .split(':')
         return +from <= +start && +start < +to

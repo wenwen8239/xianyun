@@ -1,7 +1,7 @@
 <template>
   <div class="flight">
     <!-- 机票信息 -->
-    <el-row type="flex" justify="space-between" align="middle" class="flight-item" @click.native="handleShowRecommend">
+    <el-row type="flex" justify="space-between" align="middle" class="flight-item" @click.native="showRecommend = !showRecommend">
       <el-col>{{data.airline_name}}  {{data.flight_no}}</el-col>
       <el-col>
         <strong>{{data.dep_time}}</strong>
@@ -71,9 +71,9 @@ export default {
   },
   methods: {
     // 实现点击列表展开隐藏列表数据
-    handleShowRecommend() {
-      this.showRecommend = !this.showRecommend
-    },
+    // handleShowRecommend() {
+    //   this.showRecommend = !this.showRecommend
+    // },
     // 点击选定跳转到订单页面
     handleToOrder(id,seat_xid) {
       // 跳转到订单页面
@@ -84,6 +84,10 @@ export default {
           seat_xid
         }
       })
+    },
+    
+    changeShow() {
+      this.showRecommend = false
     }
   }
 }

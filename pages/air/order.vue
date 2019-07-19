@@ -1,5 +1,5 @@
 <template>
-  <div class="order">
+  <div class="order" v-loading="loading">
     <el-row type="flex" justify="space-between">
       <!-- 订单表单 -->
       <div class="main">
@@ -26,6 +26,8 @@ export default {
   },
   data() {
     return {
+      // 页面加载效果开始
+      loading: true,
       infoData: {
         // 初始化保险数据
         insurances: [],
@@ -35,6 +37,10 @@ export default {
     }
   },
   mounted () {
+    // 页面加载效果停止
+    setTimeout(() => {
+      this.loading = false
+    },500)
     // 请求机票信息
     const { query } = this.$route;
     console.log(query)

@@ -12,10 +12,9 @@
           </el-input>
         </el-form-item>
         <el-form-item label="证件类型">
-          <el-input placeholder="证件号码" class="input-with-select" v-model="item.id">
-            <el-select slot="prepend" placeholder="请选择" value="1" width="120px">
-              <el-option label="身份证" value="1"></el-option>
-              <el-option label="护照" value="2"></el-option>
+          <el-input placeholder="证件号码" v-model="item.id" class="input-with-select">
+            <el-select slot="prepend" v-model="select" placeholder="请选择">
+              <el-option :label="cards.label" :value="cards.value" v-for="(cards,index) in card" :key="index"></el-option>
             </el-select>
           </el-input>
         </el-form-item>
@@ -66,16 +65,20 @@ export default {
   },
   data() {
     return {
-      select: '',
+      select: '身份证',
       // 乘机人信息
       users: [{
-        username: '王小路',
-        id: '12345'
+        username: '',
+        id: ''
       }],
+      card: [
+        {value: "1",label: '身份证'},
+        {value: "2",label: '护照'}
+      ],
       insurances: [], // 保险数据
-      contactName: '王小小', // 联系人姓名
-      contactPhone: '13456789876', // 联系人电话
-      captcha: '000000', // 验证码,
+      contactName: '', // 联系人姓名
+      contactPhone: '', // 联系人电话
+      captcha: '', // 验证码,
       invoice: false // 是否需要发票
     }
   },
@@ -170,9 +173,9 @@ export default {
           type: 'success'
         })
       })
-      .catch(err => {
-        console.log(err)
-      })
+      // .catch(err => {
+      //   console.log(err)
+      // })
     },
     // 提交表单
     handleSubmit() {
@@ -211,14 +214,14 @@ export default {
         }, 2000);
       })
       .catch(err => {
-        console.log(err)
+        // console.log(err)
         const { message } = err.response.data;
         // 弹出提示
-        this.$confirm(message,'提示', {
-          confirmButtonText: '确定',
-          showCancelButton: false,
-          type: 'warning'
-        })
+        // this.$confirm(message,'提示', {
+        //   confirmButtonText: '确定',
+        //   showCancelButton: false,
+        //   type: 'warning'
+        // })
       })
     }
   }
