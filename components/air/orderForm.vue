@@ -250,7 +250,6 @@ export default {
           })
           console.log(res.data,123)
           const { data: {id} } = res.data;
-          console.log(id)
           // 跳转至付款页
           setTimeout(() => {
             this.$router.push({
@@ -333,13 +332,6 @@ export default {
     margin: 50px auto;
     width: 250px;
     height: 50px;
-  }
-}
-.air {
-  &:first-child {
-    .delete-user {
-      // display: none;
-    }
   }
 }
 </style>

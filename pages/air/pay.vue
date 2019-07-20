@@ -2,7 +2,7 @@
   <div class="container" v-loading="loading">
     <div class="pay">
       <div class="pay-title">
-        支付总金额<span class="pay-price">￥{{Number(price).toFixed(2)}}</span>
+        支付总金额<span class="pay-price">￥{{Number(this.info.price).toFixed(2)}}</span>
       </div>
       <div class="pay-main">
         <h1>微信支付</h1>
@@ -31,6 +31,7 @@ export default {
     return {
       loading: true,
       price: 0,
+      info: {},
       timer: null
     }
   },
@@ -38,33 +39,33 @@ export default {
     setTimeout(() => {
       this.loading = false
     },1000)
+    // 由于异步请求数据的速度大于获取
     // 获取订单详情
     setTimeout(() => {
       // 获取路由传递的id
       const { id } = this.$route.query;
-      // 获取store中的用户信息
-      const { user: {userInfo} } = this.$store.state;
+      // 获取store中存储的用户数据
+      const {user: {userInfo}} = this.$store.state;
       // 请求二维码
       this.$axios({
         url: `/airorders/${id}`,
         // 在请求头设置token
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
+          Authorization: `Bearer ${userInfo.token || 'NO TOKEN'}`
         }
       })
       .then(res => {
-        console.log(res)
-        // 获取二维码信息与价格
-        const {payInfo , price} = res.data
-        this.price = price
-        // 生成二维码到canvas中
+        console.log(res.data)
+        this.info = res.data
+        // 获取页面的dom元素
         const stage = document.querySelector('#qrcode-stage');
-        QRCode.toCanvas(stage,payInfo.code_url, {
+        // 生成二维码到canvas中
+        QRCode.toCanvas(stage,this.info.payInfo.code_url, {
           width: 200
         })
         this.timer = setInterval(async () => {
-          const isResolve = await this.isPay(payInfo);
-          console.log(isResolve)
+          const isResolve = await this.isPay(this.info.payInfo);
+          // console.log(isResolve)
           if (isResolve) {
             clearInterval(this.timer)
             return;
@@ -77,7 +78,8 @@ export default {
     // 检查付款状态
     async isPay(data) {
       const { id } = this.$route.query;
-      const { api,user: {userInfo} } = this.$$store.state;
+      // 获取store中存储的用户数据
+      const {user: {userInfo}} = this.$store.state;
       return this.$axios({
         url: '/airorders/pay',
         method: 'POST',
@@ -87,11 +89,11 @@ export default {
           out_trade_no: data.order_no  // 订单编号(带字母)
         },
         headers: {
-          Authorization: `Bearer ${userInfo.token}`
+          Authorization: `Bearer ${userInfo.token || 'NO TOKEN'}`
         }
       })
       .then(res => {
-        console.log(res)
+        console.log(res.data)
         const {statusTxt} = res.data;
         if (statusTxt === '支付完成') {
           this.$confirm('订单支付成功','提示', {
@@ -99,9 +101,11 @@ export default {
             showCancelButton: false,
             type: 'success'
           });
-          return Promise.resolve(true);
+          return true
         }
-        return Promise.resolve(false)
+        else {
+          return false
+        }
       })
     }
   },
