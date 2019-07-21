@@ -72,9 +72,6 @@ export default {
       return `${Math.floor(dis / 60)}时${dis % 60}`;
     }
   },
-  mounted () {
-    console.log(this.total)
-  },
   methods: {
     // 实现点击列表展开隐藏列表数据
     // handleShowRecommend() {

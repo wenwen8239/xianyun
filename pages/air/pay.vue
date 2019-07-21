@@ -81,7 +81,7 @@ export default {
       // 获取store中存储的用户数据
       const {user: {userInfo}} = this.$store.state;
       return this.$axios({
-        url: '/airorders/pay',
+        url: '/airorders/checkpay',
         method: 'POST',
         data: {
           id, // 订单编号
