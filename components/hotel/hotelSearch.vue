@@ -1,9 +1,10 @@
 <template>
+  <!-- 酒店搜索组件 -->
   <div class="container">
     <!-- 面包屑导航 -->
     <el-breadcrumb separator="/" class="breadcrumb">
       <el-breadcrumb-item :to="{ path: '/hotel' }">酒店</el-breadcrumb-item>
-      <el-breadcrumb-item>南京市酒店预订</el-breadcrumb-item>
+      <el-breadcrumb-item>{{place}}市酒店预订</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 远程搜索输入框 -->
     <el-autocomplete
@@ -71,7 +72,7 @@
 export default {
    data() {
     return {
-      place: '',
+      place: '南京',
       data: '',
       person: '',
       adult: '1成人',
@@ -96,22 +97,49 @@ export default {
     }
   },
   methods: {
+    // 封装实现下拉菜单
+    querySearch(value) {
+      return new Promise((resolve,reject) => {
+        // 判断当输入的数据为空的时候
+        if (!value) {
+          return resolve([]); // 不加载下拉菜单
+        }
+        // 请求机票城市信息
+        this.$axios({
+          url: '/airs/city',
+          params: {
+            name: value
+          }
+        }).then(res => {
+          // console.log(res)
+          // 获取请求到的数据
+          const {data} = res.data;
+          // 给数组中的对象添加value，下拉列表必须要有value选项，value是用来展示下拉列表数据的绑定值
+          const newArr = data.map(v => {
+            v.value = v.name.replace('市','');
+              return v;
+          })
+          resolve(newArr)
+        })
+      })
+    },
+    // await后面要接收promise对象，返回的值是resolve的参数
     // 搜索城市
-    queryPlaceSearch(value,callback) {
-      console.log(value)
+    async queryPlaceSearch(value,callback) {
+      const res = await this.querySearch(value);
+      if (res.length > 0) {
+        this.place = res[0].value;
+        // 修改路由地址的id
+        this.$router.push(`/hotel?city=${res[0].id}`)
+      }
+      callback(res)
     },
     // 点击选中建议项时触发
-    handlePlaceSelect(value) {
-      console.log(value)
-    },
-    handleNumberSelect(value) {
-      console.log(value)
-    },
-    queryNumberSearch(queryString, cb) {
-
-        // 调用 callback 返回建议列表的数据
-        cb(results);
-      }
+    handlePlaceSelect(item) {
+      this.place = item.value
+      // 修改路由地址的id
+      this.$router.push(`/hotel?city=${item.id}`)
+    }
   }
 }
 </script>
@@ -123,5 +151,3 @@ export default {
     }
   }
 </style>
-
-
