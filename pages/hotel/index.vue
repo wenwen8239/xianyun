@@ -2,7 +2,7 @@
     <!-- 酒店首页 -->
     <div class="container">
       <!-- 头部搜索组件 -->
-      <HotelSearch/>
+      <HotelSearch @getAllHotelInfo="getAllHotelInfo"/>
       <!-- 酒店介绍模块 -->
       <div class="hotel-option">
         <el-row type="flex">
@@ -13,54 +13,9 @@
               <el-col :span="21">
                 <div class="scenics-box" :class={show:isshow}>
                   <nuxt-link to="#">全部</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
-                  <nuxt-link to="#">镇兴路沿线</nuxt-link>
+                  <span>
+                    <nuxt-link to="#" v-for="(item,index) in scenics" :key="index">{{item.name}}</nuxt-link>
+                  </span>
                 </div>
                 <nuxt-link to="#" class="moreAera" :class={rotate:isrotate} @click.native="changeShow">
                   <i class="el-icon-d-arrow-right"></i>
@@ -154,7 +109,9 @@ export default {
       pageIndex: 1,
       // 页面显示条数
       pageSize: 2,
-      loading: true
+      loading: true,
+      // 景区
+      scenics: []
     }
   },
   computed: {
@@ -171,19 +128,7 @@ export default {
     this.$router.push('/hotel?city=199')
     setTimeout(() => {
       var id = parseInt(this.$route.query.city);
-      console.log(id)
-       this.$axios({
-        url: `/hotels`,
-        query: this.$route.query
-      })
-      .then(res => {
-        const {data} = res.data
-        console.log(data)
-        // 设置酒店数据
-        this.hotelInfo = data
-        // 设置总条数
-        this.total = data.length
-      })
+      this.getAllHotelInfo(id,'南京')
     },1)
     setTimeout(() => {
       this.loading = false
@@ -200,6 +145,31 @@ export default {
         this.isshow = true
         this.isrotate = true
       }
+    },
+    // 封装获取页面数据
+    getAllHotelInfo(id,name) {
+      // 获取对应城市酒店信息
+       this.$axios({
+        url: `/hotels`,
+        query: this.$route.query
+      })
+      .then(res => {
+        const {data} = res.data
+        // 设置酒店数据
+        this.hotelInfo = data
+        // 设置总条数
+        this.total = data.length
+      })
+      // 获取城市景点
+      this.$axios({
+        url: '/cities',
+        params: {
+          name
+        }
+      })
+      .then(res => {
+        this.scenics = res.data.data[0].scenics
+      })
     },
     // 实现页面分页
     setDateList() {
